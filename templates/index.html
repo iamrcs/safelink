@@ -1,75 +1,20 @@
-<!-- templates/index.html -->
-<!doctype html>
-<html lang="hi">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>SafeLink — Organic Redirect</title>
-  <link rel="stylesheet" href="/static/style.css">
+  <meta charset="UTF-8">
+  <title>SafeLink Generator | Organic Redirection</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
 </head>
-<body>
-  <main class="container">
-    <header>
-      <h1>SafeLink — Organic Redirect</h1>
-      <p class="muted">Paste a URL, बनाइए सुरक्षित shortlink — intermediate redirect + countdown.</p>
-    </header>
-
-    <section class="card">
-      <label>Target URL</label>
-      <input id="target" placeholder="https://example.com/some-page" />
-      <label>Custom slug (optional)</label>
-      <input id="custom" placeholder="my-link (alphanumeric)" />
-      <button id="create">Create SafeLink</button>
-      <p id="msg" class="muted"></p>
-      <div id="result" class="result hidden">
-        <p>Shortlink: <a id="shortlink" target="_blank"></a></p>
-        <button id="copy">Copy</button>
-      </div>
-    </section>
-
-    <footer class="muted small">
-      Tip: यह demo है — production में HTTPS, auth और rate-limiting लगाना न भूलें।
-    </footer>
-  </main>
-
-  <script>
-    const baseApi = "/api/create";
-    const btn = document.getElementById("create");
-    const msg = document.getElementById("msg");
-    const result = document.getElementById("result");
-    const shortlinkA = document.getElementById("shortlink");
-
-    btn.addEventListener("click", async () => {
-      const target = document.getElementById("target").value.trim();
-      const custom = document.getElementById("custom").value.trim();
-      msg.textContent = "";
-      result.classList.add("hidden");
-
-      try {
-        const r = await fetch(baseApi, {
-          method: "POST",
-          headers: {"Content-Type":"application/json"},
-          body: JSON.stringify({ target, custom })
-        });
-        const j = await r.json();
-        if (!r.ok) {
-          msg.textContent = j.error || "Server error";
-          return;
-        }
-        shortlinkA.href = j.short;
-        shortlinkA.textContent = j.short;
-        result.classList.remove("hidden");
-        msg.textContent = "Created!";
-      } catch (e) {
-        msg.textContent = "Network error";
-      }
-    });
-
-    document.getElementById("copy").addEventListener("click", () => {
-      const url = shortlinkA.href;
-      navigator.clipboard?.writeText(url);
-      alert("Copied!");
-    });
-  </script>
+<body onload="startCountdown('page1')">
+  <div class="countdown">Continue in <span id="timer">5</span>s</div>
+  <div class="container">
+    <h1>🔒 SafeLink Generator</h1>
+    <p>Convert your external links into Google-safe redirect URLs.</p>
+    <form action="/generate" method="POST">
+      <input type="url" name="url" placeholder="Enter your destination URL" required>
+      <button type="submit">Generate SafeLink</button>
+    </form>
+  </div>
 </body>
 </html>
