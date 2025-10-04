@@ -23,7 +23,6 @@ def get_db():
         db.row_factory = sqlite3.Row
     return db
 
-@app.before_first_request
 def init_db():
     db = get_db()
     db.execute("""
@@ -36,6 +35,11 @@ def init_db():
     );
     """)
     db.commit()
+
+@app.before_request
+def ensure_db():
+    # create table if not exists (safe + idempotent)
+    init_db()
 
 @app.teardown_appcontext
 def close_connection(exc):
@@ -72,7 +76,6 @@ def api_create():
     db = get_db()
     cur = db.cursor()
 
-    # custom slug check
     if custom:
         if not custom.isalnum() or len(custom) < 3:
             return jsonify({"ok": False, "error": "Custom slug must be alphanumeric"}), 400
