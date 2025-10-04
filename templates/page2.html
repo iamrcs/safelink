@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Processing Link...</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</head>
+<body onload="startCountdown('page2', '/final/{{ token }}')">
+  <div class="countdown">Next step in <span id="timer">5</span>s</div>
+  <div class="container">
+    <h1>🔄 Securing Your Link...</h1>
+    <p>Your SafeLink is being verified for organic Google compliance.</p>
+  </div>
+</body>
+</html>
